@@ -97,22 +97,37 @@
             </div>
         </section>
 
-        <!-- Testimonials -->
-        <section class="testimonials">
-            <div class="container">
-                <h2 class="section-title">What Foodies Say</h2>
-                <div class="testimonial-grid">
-                    <div class="t-card">
-                        <p>"This app helps me choose meals daily! Perfect for campus students."</p>
-                        <div class="user"><strong>Brian K.</strong> ⭐⭐⭐⭐⭐</div>
-                    </div>
-                    <div class="t-card">
-                        <p>"Amazing food suggestions! I never knew I could get Pilau for that cheap."</p>
-                        <div class="user"><strong>Stacy W.</strong> ⭐⭐⭐⭐⭐</div>
-                    </div>
-                </div>
+        <!-- Testimonials Section - Improved -->
+<section class="testimonials">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">What Foodies Say</h2>
+            <p class="section-subtitle">Join thousands of happy foodies finding their perfect meals</p>
+        </div>
+        
+        <div class="testimonial-slider" id="testimonial-slider">
+            <div class="testimonial-grid" id="testimonial-grid">
+                <!-- Testimonial cards will be injected via JavaScript -->
             </div>
-        </section>
+            
+            <!-- Slider Navigation (optional) -->
+            <div class="slider-controls">
+                <button class="slider-prev" aria-label="Previous testimonial">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="slider-dots" id="slider-dots"></div>
+                <button class="slider-next" aria-label="Next testimonial">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Add Testimonial CTA -->
+        <div class="testimonial-cta">
+            <p>Love our service? <button id="share-testimonial-btn" class="text-btn">Share your experience</button></p>
+        </div>
+    </div>
+</section>
     </main>
 
     <!-- WhatsApp Order Section -->
