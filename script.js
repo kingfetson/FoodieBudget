@@ -451,6 +451,366 @@ const init = () => {
     initSmoothScroll();
 };
 
+// ========================
+// TESTIMONIALS MODULE
+// ========================
+const testimonialsData = [
+    {
+        id: 1,
+        name: "Brian K.",
+        location: "Nairobi, CBD",
+        rating: 5,
+        comment: "This app helps me choose meals daily! Perfect for campus students. I've saved over 2000 KES this month alone.",
+        avatar: "BK",
+        date: "2024-01-15"
+    },
+    {
+        id: 2,
+        name: "Stacy W.",
+        location: "Westlands",
+        rating: 5,
+        comment: "Amazing food suggestions! I never knew I could get Pilau for that cheap. The WhatsApp order feature is a game-changer!",
+        avatar: "SW",
+        date: "2024-01-10"
+    },
+    {
+        id: 3,
+        name: "James O.",
+        location: "Kilimani",
+        rating: 4.5,
+        comment: "Finally an app that understands Kenyan pockets. The deals section saves me everyday. Highly recommended!",
+        avatar: "JO",
+        date: "2024-01-05"
+    },
+    {
+        id: 4,
+        name: "Mary N.",
+        location: "Eastlands",
+        rating: 5,
+        comment: "As a mom of two, budgeting meals is crucial. FoodieBudget helps me plan weekly meals without breaking the bank.",
+        avatar: "MN",
+        date: "2024-01-03"
+    },
+    {
+        id: 5,
+        name: "Peter M.",
+        location: "Thika Road",
+        rating: 4,
+        comment: "Great variety of meals and very accurate budget suggestions. The UI is beautiful and easy to use.",
+        avatar: "PM",
+        date: "2023-12-28"
+    }
+];
+
+let currentSlide = 0;
+let slideInterval;
+let touchStartX = 0;
+let touchEndX = 0;
+
+// Create star rating HTML
+const createStars = (rating) => {
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 !== 0;
+    let starsHTML = '';
+    
+    for (let i = 0; i < fullStars; i++) {
+        starsHTML += '<i class="fas fa-star"></i>';
+    }
+    if (hasHalfStar) {
+        starsHTML += '<i class="fas fa-star-half-alt"></i>';
+    }
+    const emptyStars = 5 - Math.ceil(rating);
+    for (let i = 0; i < emptyStars; i++) {
+        starsHTML += '<i class="far fa-star"></i>';
+    }
+    
+    return starsHTML;
+};
+
+// Create testimonial card HTML
+const createTestimonialCard = (testimonial) => {
+    return `
+        <div class="t-card" data-id="${testimonial.id}">
+            <p>${testimonial.comment}</p>
+            <div class="user-info">
+                <div class="user-avatar">${testimonial.avatar}</div>
+                <div class="user-details">
+                    <strong>${testimonial.name}</strong>
+                    <div class="user-location">
+                        <i class="fas fa-map-marker-alt"></i> ${testimonial.location}
+                    </div>
+                </div>
+                <div class="rating-stars">
+                    ${createStars(testimonial.rating)}
+                </div>
+            </div>
+        </div>
+    `;
+};
+
+// Render testimonials
+const renderTestimonials = () => {
+    const grid = document.getElementById('testimonial-grid');
+    if (!grid) return;
+    
+    grid.innerHTML = testimonialsData.map(createTestimonialCard).join('');
+    createSliderDots();
+    initTouchSwipe();
+};
+
+// Create slider dots navigation
+const createSliderDots = () => {
+    const dotsContainer = document.getElementById('slider-dots');
+    if (!dotsContainer) return;
+    
+    const totalSlides = Math.ceil(testimonialsData.length / 3);
+    dotsContainer.innerHTML = '';
+    
+    for (let i = 0; i < totalSlides; i++) {
+        const dot = document.createElement('div');
+        dot.classList.add('dot');
+        if (i === currentSlide) dot.classList.add('active');
+        dot.addEventListener('click', () => goToSlide(i));
+        dotsContainer.appendChild(dot);
+    }
+};
+
+// Update slider position
+const updateSliderPosition = () => {
+    const grid = document.getElementById('testimonial-grid');
+    if (!grid) return;
+    
+    const slideWidth = document.querySelector('.t-card')?.offsetWidth + 30 || 310;
+    const offset = currentSlide * (slideWidth * 3);
+    grid.style.transform = `translateX(-${offset}px)`;
+    
+    // Update dots
+    document.querySelectorAll('.dot').forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentSlide);
+    });
+};
+
+// Go to specific slide
+const goToSlide = (index) => {
+    const totalSlides = Math.ceil(testimonialsData.length / 3);
+    currentSlide = Math.max(0, Math.min(index, totalSlides - 1));
+    updateSliderPosition();
+};
+
+// Next slide
+const nextSlide = () => {
+    const totalSlides = Math.ceil(testimonialsData.length / 3);
+    if (currentSlide < totalSlides - 1) {
+        currentSlide++;
+        updateSliderPosition();
+    }
+};
+
+// Previous slide
+const prevSlide = () => {
+    if (currentSlide > 0) {
+        currentSlide--;
+        updateSliderPosition();
+    }
+};
+
+// Auto slide
+const startAutoSlide = () => {
+    slideInterval = setInterval(() => {
+        const totalSlides = Math.ceil(testimonialsData.length / 3);
+        if (currentSlide < totalSlides - 1) {
+            currentSlide++;
+        } else {
+            currentSlide = 0;
+        }
+        updateSliderPosition();
+    }, 5000);
+};
+
+const stopAutoSlide = () => {
+    if (slideInterval) clearInterval(slideInterval);
+};
+
+// Touch swipe for mobile
+const initTouchSwipe = () => {
+    const grid = document.getElementById('testimonial-grid');
+    if (!grid) return;
+    
+    grid.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+    });
+    
+    grid.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    });
+};
+
+const handleSwipe = () => {
+    const swipeThreshold = 50;
+    if (touchEndX < touchStartX - swipeThreshold) {
+        nextSlide();
+    } else if (touchEndX > touchStartX + swipeThreshold) {
+        prevSlide();
+    }
+};
+
+// Modal for sharing testimonials
+const initShareTestimonial = () => {
+    const shareBtn = document.getElementById('share-testimonial-btn');
+    if (!shareBtn) return;
+    
+    shareBtn.addEventListener('click', () => {
+        createShareModal();
+    });
+};
+
+const createShareModal = () => {
+    // Remove existing modal if any
+    const existingModal = document.getElementById('testimonial-modal');
+    if (existingModal) existingModal.remove();
+    
+    const modal = document.createElement('div');
+    modal.id = 'testimonial-modal';
+    modal.className = 'modal';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h3>Share Your Experience</h3>
+            <form id="share-form" class="share-form">
+                <input type="text" id="share-name" placeholder="Your Name" required>
+                <input type="text" id="share-location" placeholder="Your Location" required>
+                <div class="rating-input" id="rating-input">
+                    <i class="far fa-star" data-rating="1"></i>
+                    <i class="far fa-star" data-rating="2"></i>
+                    <i class="far fa-star" data-rating="3"></i>
+                    <i class="far fa-star" data-rating="4"></i>
+                    <i class="far fa-star" data-rating="5"></i>
+                </div>
+                <textarea id="share-comment" rows="4" placeholder="What do you think about FoodieBudget?" required></textarea>
+                <button type="submit" class="primary-btn">Submit Review</button>
+            </form>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    modal.classList.add('active');
+    
+    // Close modal
+    const closeBtn = modal.querySelector('.modal-close');
+    closeBtn.addEventListener('click', () => modal.remove());
+    
+    // Click outside to close
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.remove();
+    });
+    
+    // Star rating interaction
+    const stars = modal.querySelectorAll('#rating-input i');
+    let selectedRating = 0;
+    
+    stars.forEach(star => {
+        star.addEventListener('mouseenter', () => {
+            const rating = parseInt(star.dataset.rating);
+            updateStarsHover(stars, rating);
+        });
+        
+        star.addEventListener('mouseleave', () => {
+            updateStarsHover(stars, selectedRating);
+        });
+        
+        star.addEventListener('click', () => {
+            selectedRating = parseInt(star.dataset.rating);
+            updateStarsHover(stars, selectedRating, true);
+        });
+    });
+    
+    // Form submission
+    const form = modal.querySelector('#share-form');
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const name = document.getElementById('share-name').value;
+        const location = document.getElementById('share-location').value;
+        const comment = document.getElementById('share-comment').value;
+        
+        if (!name || !location || !comment || selectedRating === 0) {
+            alert('Please fill all fields and select a rating');
+            return;
+        }
+        
+        // Add new testimonial
+        const newTestimonial = {
+            id: testimonialsData.length + 1,
+            name: name,
+            location: location,
+            rating: selectedRating,
+            comment: comment,
+            avatar: name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2),
+            date: new Date().toISOString().split('T')[0]
+        };
+        
+        testimonalsData.push(newTestimonial);
+        renderTestimonials();
+        modal.remove();
+        
+        // Show success message
+        const successMsg = document.createElement('div');
+        successMsg.textContent = 'Thank you for sharing your experience! 🎉';
+        successMsg.style.cssText = `
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            z-index: 2001;
+            animation: slideUp 0.3s ease;
+        `;
+        document.body.appendChild(successMsg);
+        setTimeout(() => successMsg.remove(), 3000);
+    });
+};
+
+const updateStarsHover = (stars, rating, isPermanent = false) => {
+    stars.forEach((star, index) => {
+        const starRating = parseInt(star.dataset.rating);
+        if (starRating <= rating) {
+            star.className = isPermanent ? 'fas fa-star' : 'fas fa-star';
+        } else {
+            star.className = isPermanent ? 'far fa-star' : 'far fa-star';
+        }
+    });
+};
+
+// Initialize testimonials
+const initTestimonials = () => {
+    renderTestimonials();
+    
+    // Slider controls
+    const prevBtn = document.querySelector('.slider-prev');
+    const nextBtn = document.querySelector('.slider-next');
+    
+    if (prevBtn) prevBtn.addEventListener('click', prevSlide);
+    if (nextBtn) nextBtn.addEventListener('click', nextSlide);
+    
+    startAutoSlide();
+    
+    // Pause auto-slide on hover
+    const slider = document.getElementById('testimonial-slider');
+    if (slider) {
+        slider.addEventListener('mouseenter', stopAutoSlide);
+        slider.addEventListener('mouseleave', startAutoSlide);
+    }
+    
+    initShareTestimonial();
+};
+
+// Update window resize handling
+window.addEventListener('resize', () => {
+    updateSliderPosition();
+});
 // Start the app when DOM is ready
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
