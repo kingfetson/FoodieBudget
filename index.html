@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodieBudget | Eat Well, Spend Smart</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">Foodie<span>Budget</span></div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#find-meal">Find Meal</a></li>
+                <li><a href="#deals">Deals</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button id="theme-toggle"><i class="fas fa-moon"></i></button>
+                <div class="menu-toggle"><i class="fas fa-bars"></i></div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="home" class="hero">
+            <div class="hero-content">
+                <h1>Find the best meals for your <span class="highlight">budget.</span></h1>
+                <p>The smartest way to discover delicious meals in Kenya that fit your pocket. No more guessing, just eating.</p>
+                <a href="#find-meal" class="cta-btn">Find My Meal</a>
+            </div>
+        </section>
+
+        <!-- Budget Input Section -->
+        <section id="find-meal" class="budget-section">
+            <div class="container">
+                <div class="search-card">
+                    <h2>What's your budget today?</h2>
+                    <div class="search-controls">
+                        <div class="input-group">
+                            <label>Amount (KES)</label>
+                            <input type="number" id="budget-input" placeholder="e.g. 300">
+                        </div>
+                        <div class="input-group">
+                            <label>Category</label>
+                            <select id="category-select">
+                                <option value="All">All Categories</option>
+                                <option value="Breakfast">Breakfast</option>
+                                <option value="Lunch">Lunch</option>
+                                <option value="Dinner">Dinner</option>
+                                <option value="Snacks">Snacks</option>
+                                <option value="Drinks">Drinks</option>
+                            </select>
+                        </div>
+                        <button id="suggest-btn" class="primary-btn">Suggest Food</button>
+                    </div>
+                    <div class="extra-filters">
+                        <input type="text" id="search-bar" placeholder="Search for food...">
+                        <select id="sort-select">
+                            <option value="default">Sort By</option>
+                            <option value="low">Price: Low to High</option>
+                            <option value="high">Price: High to Low</option>
+                            <option value="rating">Top Rated</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section class="results-section">
+            <div class="container">
+                <div id="loading-spinner" class="hidden">
+                    <div class="spinner"></div>
+                </div>
+                <div id="food-grid" class="food-grid">
+                    <!-- Cards will be injected here by JS -->
+                </div>
+                <div id="empty-state" class="hidden">
+                    <img src="https://illustrations.popsy.co/amber/no-results.svg" alt="No meals found">
+                    <h3>No meals found within your budget.</h3>
+                    <p>Try increasing your budget or changing the category.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Deals Section -->
+        <section id="deals" class="deals-section">
+            <div class="container">
+                <h2 class="section-title">Today's Best Deals</h2>
+                <div class="horizontal-scroll" id="deals-container">
+                    <!-- Featured items injected here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials -->
+        <section class="testimonials">
+            <div class="container">
+                <h2 class="section-title">What Foodies Say</h2>
+                <div class="testimonial-grid">
+                    <div class="t-card">
+                        <p>"This app helps me choose meals daily! Perfect for campus students."</p>
+                        <div class="user"><strong>Brian K.</strong> ⭐⭐⭐⭐⭐</div>
+                    </div>
+                    <div class="t-card">
+                        <p>"Amazing food suggestions! I never knew I could get Pilau for that cheap."</p>
+                        <div class="user"><strong>Stacy W.</strong> ⭐⭐⭐⭐⭐</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">Foodie<span>Budget</span></div>
+            <div class="socials">
+                <i class="fab fa-instagram"></i>
+                <i class="fab fa-twitter"></i>
+                <i class="fab fa-facebook"></i>
+            </div>
+            <p>&copy; 2026 FoodieBudget. Created for Smart Eaters.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
