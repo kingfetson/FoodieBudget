@@ -97,36 +97,102 @@
             </div>
         </section>
 
-        <!-- Testimonials Section - Improved -->
+        <!-- Testimonials Section - Enhanced with WhatsApp Integration -->
 <section class="testimonials">
     <div class="container">
         <div class="section-header">
             <h2 class="section-title">What Foodies Say</h2>
-            <p class="section-subtitle">Join thousands of happy foodies finding their perfect meals</p>
+            <p class="section-subtitle">Join 10,000+ happy foodies finding their perfect meals</p>
         </div>
         
-        <div class="testimonial-slider" id="testimonial-slider">
-            <div class="testimonial-grid" id="testimonial-grid">
-                <!-- Testimonial cards will be injected via JavaScript -->
+        <div class="testimonial-slider-container">
+            <button class="slider-nav prev-slide" aria-label="Previous">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            
+            <div class="testimonial-slider-wrapper">
+                <div class="testimonial-track" id="testimonial-track">
+                    <!-- Testimonial cards injected here -->
+                </div>
             </div>
             
-            <!-- Slider Navigation (optional) -->
-            <div class="slider-controls">
-                <button class="slider-prev" aria-label="Previous testimonial">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-                <div class="slider-dots" id="slider-dots"></div>
-                <button class="slider-next" aria-label="Next testimonial">
-                    <i class="fas fa-chevron-right"></i>
+            <button class="slider-nav next-slide" aria-label="Next">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+        
+        <div class="slider-dots" id="slider-dots"></div>
+        
+        <!-- Share Experience CTA -->
+        <div class="testimonial-cta">
+            <div class="cta-content">
+                <i class="fas fa-heart"></i>
+                <p>Love our service?</p>
+                <button id="share-testimonial-btn" class="share-btn">
+                    Share Your Experience <i class="fab fa-whatsapp"></i>
                 </button>
             </div>
         </div>
-        
-        <!-- Add Testimonial CTA -->
-        <div class="testimonial-cta">
-            <p>Love our service? <button id="share-testimonial-btn" class="text-btn">Share your experience</button></p>
-        </div>
     </div>
+</section>
+
+<!-- Testimonial Submission Modal (WhatsApp Integrated) -->
+<div id="testimonial-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="modal-close">&times;</span>
+        <div class="modal-header">
+            <i class="fab fa-whatsapp"></i>
+            <h3>Share Your Foodie Experience</h3>
+        </div>
+        <p class="modal-subtitle">Your review helps others discover great meals!</p>
+        
+        <form id="testimonial-form">
+            <div class="form-group">
+                <label><i class="fas fa-user"></i> Your Name</label>
+                <input type="text" id="test-name" placeholder="e.g., Brian Kipchoge" required>
+            </div>
+            
+            <div class="form-group">
+                <label><i class="fas fa-map-marker-alt"></i> Your Location</label>
+                <input type="text" id="test-location" placeholder="e.g., Nairobi, CBD" required>
+            </div>
+            
+            <div class="form-group">
+                <label><i class="fas fa-utensils"></i> Favorite Meal Found</label>
+                <input type="text" id="test-meal" placeholder="e.g., Nyama Choma, Pilau, etc.">
+            </div>
+            
+            <div class="form-group">
+                <label><i class="fas fa-star"></i> Your Rating</label>
+                <div class="rating-select" id="rating-select">
+                    <span data-rating="1">⭐</span>
+                    <span data-rating="2">⭐⭐</span>
+                    <span data-rating="3">⭐⭐⭐</span>
+                    <span data-rating="4">⭐⭐⭐⭐</span>
+                    <span data-rating="5">⭐⭐⭐⭐⭐</span>
+                </div>
+                <input type="hidden" id="test-rating" value="5">
+            </div>
+            
+            <div class="form-group">
+                <label><i class="fas fa-comment"></i> Your Review</label>
+                <textarea id="test-comment" rows="3" placeholder="What did you love about FoodieBudget?" required></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label><i class="fas fa-phone"></i> WhatsApp Number (Optional)</label>
+                <input type="tel" id="test-phone" placeholder="e.g., 0712345678">
+                <small>We'll send you a discount coupon on WhatsApp!</small>
+            </div>
+            
+            <button type="submit" class="submit-review-btn">
+                <i class="fab fa-whatsapp"></i> Submit via WhatsApp
+            </button>
+        </form>
+        
+        <p class="modal-footer-note">By submitting, you agree to share this review on our platform</p>
+    </div>
+</div>
 </section>
     </main>
 
