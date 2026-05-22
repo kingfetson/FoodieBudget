@@ -452,197 +452,252 @@ const init = () => {
 };
 
 // ========================
-// TESTIMONIALS MODULE
+// TESTIMONIALS MODULE WITH WHATSAPP INTEGRATION
 // ========================
-const testimonialsData = [
+
+// Testimonials Database
+const testimonialsDatabase = [
     {
         id: 1,
-        name: "Brian K.",
+        name: "Brian Kipchoge",
         location: "Nairobi, CBD",
         rating: 5,
         comment: "This app helps me choose meals daily! Perfect for campus students. I've saved over 2000 KES this month alone.",
-        avatar: "BK",
-        date: "2024-01-15"
+        favoriteMeal: "Nyama Choma",
+        date: "2024-01-15",
+        phone: "0712345678"
     },
     {
         id: 2,
-        name: "Stacy W.",
+        name: "Stacy Wanjiku",
         location: "Westlands",
         rating: 5,
         comment: "Amazing food suggestions! I never knew I could get Pilau for that cheap. The WhatsApp order feature is a game-changer!",
-        avatar: "SW",
-        date: "2024-01-10"
+        favoriteMeal: "Pilau Beef",
+        date: "2024-01-10",
+        phone: "0723456789"
     },
     {
         id: 3,
-        name: "James O.",
+        name: "James Otieno",
         location: "Kilimani",
-        rating: 4.5,
+        rating: 5,
         comment: "Finally an app that understands Kenyan pockets. The deals section saves me everyday. Highly recommended!",
-        avatar: "JO",
-        date: "2024-01-05"
+        favoriteMeal: "Chips Chicken",
+        date: "2024-01-05",
+        phone: null
     },
     {
         id: 4,
-        name: "Mary N.",
+        name: "Mary Njeri",
         location: "Eastlands",
         rating: 5,
         comment: "As a mom of two, budgeting meals is crucial. FoodieBudget helps me plan weekly meals without breaking the bank.",
-        avatar: "MN",
-        date: "2024-01-03"
+        favoriteMeal: "Githeri",
+        date: "2024-01-03",
+        phone: "0734567890"
     },
     {
         id: 5,
-        name: "Peter M.",
+        name: "Peter Mwangi",
         location: "Thika Road",
         rating: 4,
         comment: "Great variety of meals and very accurate budget suggestions. The UI is beautiful and easy to use.",
-        avatar: "PM",
-        date: "2023-12-28"
+        favoriteMeal: "Chapati Beans",
+        date: "2023-12-28",
+        phone: null
+    },
+    {
+        id: 6,
+        name: "Sarah Chemutai",
+        location: "Eldoret",
+        rating: 5,
+        comment: "I love how easy it is to find affordable meals. The search by budget feature is brilliant!",
+        favoriteMeal: "Mukimo",
+        date: "2024-01-12",
+        phone: "0745678901"
+    },
+    {
+        id: 7,
+        name: "David Omondi",
+        location: "Kisumu",
+        rating: 4.5,
+        comment: "Best food discovery platform in Kenya. The deals are actually good and the vendors are reliable.",
+        favoriteMeal: "Omena",
+        date: "2024-01-08",
+        phone: null
     }
 ];
 
-let currentSlide = 0;
-let slideInterval;
+// Slider Configuration
+let currentIndex = 0;
+let slidesToShow = 3;
+let autoSlideInterval;
 let touchStartX = 0;
 let touchEndX = 0;
 
-// Create star rating HTML
-const createStars = (rating) => {
-    const fullStars = Math.floor(rating);
-    const hasHalfStar = rating % 1 !== 0;
-    let starsHTML = '';
+// Helper Functions
+const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffTime = Math.abs(now - date);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     
-    for (let i = 0; i < fullStars; i++) {
-        starsHTML += '<i class="fas fa-star"></i>';
-    }
-    if (hasHalfStar) {
-        starsHTML += '<i class="fas fa-star-half-alt"></i>';
-    }
-    const emptyStars = 5 - Math.ceil(rating);
-    for (let i = 0; i < emptyStars; i++) {
-        starsHTML += '<i class="far fa-star"></i>';
-    }
-    
-    return starsHTML;
+    if (diffDays === 1) return "Yesterday";
+    if (diffDays <= 7) return `${diffDays} days ago`;
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 };
 
-// Create testimonial card HTML
+const getRatingStars = (rating) => {
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 !== 0;
+    let stars = '';
+    
+    for (let i = 0; i < fullStars; i++) stars += '★';
+    if (hasHalfStar) stars += '½';
+    for (let i = 0; i < (5 - Math.ceil(rating)); i++) stars += '☆';
+    
+    return stars;
+};
+
+const getInitials = (name) => {
+    return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+};
+
+// Create Testimonial Card HTML
 const createTestimonialCard = (testimonial) => {
     return `
         <div class="t-card" data-id="${testimonial.id}">
-            <p>${testimonial.comment}</p>
+            <div class="testimonial-header">
+                <div class="testimonial-rating">${getRatingStars(testimonial.rating)}</div>
+                <div class="testimonial-date">${formatDate(testimonial.date)}</div>
+            </div>
+            <p>"${testimonial.comment}"</p>
             <div class="user-info">
-                <div class="user-avatar">${testimonial.avatar}</div>
+                <div class="user-avatar">${getInitials(testimonial.name)}</div>
                 <div class="user-details">
                     <strong>${testimonial.name}</strong>
                     <div class="user-location">
                         <i class="fas fa-map-marker-alt"></i> ${testimonial.location}
                     </div>
-                </div>
-                <div class="rating-stars">
-                    ${createStars(testimonial.rating)}
+                    ${testimonial.favoriteMeal ? `<div class="favorite-meal"><i class="fas fa-heart"></i> Loves ${testimonial.favoriteMeal}</div>` : ''}
                 </div>
             </div>
         </div>
     `;
 };
 
-// Render testimonials
-const renderTestimonials = () => {
-    const grid = document.getElementById('testimonial-grid');
-    if (!grid) return;
-    
-    grid.innerHTML = testimonialsData.map(createTestimonialCard).join('');
-    createSliderDots();
-    initTouchSwipe();
+// Update SlidesToShow based on screen width
+const updateSlidesToShow = () => {
+    if (window.innerWidth <= 768) return 1;
+    if (window.innerWidth <= 1024) return 2;
+    return 3;
 };
 
-// Create slider dots navigation
-const createSliderDots = () => {
+// Render Testimonials
+const renderTestimonials = () => {
+    const track = document.getElementById('testimonial-track');
+    if (!track) return;
+    
+    track.innerHTML = testimonialsDatabase.map(createTestimonialCard).join('');
+    updateSliderDots();
+    updateSliderPosition();
+};
+
+// Update Slider Position
+const updateSliderPosition = () => {
+    const track = document.getElementById('testimonial-track');
+    if (!track) return;
+    
+    const cardWidth = document.querySelector('.t-card')?.offsetWidth || 300;
+    const gap = 25;
+    const slideWidth = cardWidth + gap;
+    const translateX = currentIndex * slideWidth;
+    
+    track.style.transform = `translateX(-${translateX}px)`;
+    updateActiveDot();
+};
+
+// Update Slider Dots
+const updateSliderDots = () => {
     const dotsContainer = document.getElementById('slider-dots');
     if (!dotsContainer) return;
     
-    const totalSlides = Math.ceil(testimonialsData.length / 3);
+    const totalDots = Math.ceil(testimonialsDatabase.length / slidesToShow);
     dotsContainer.innerHTML = '';
     
-    for (let i = 0; i < totalSlides; i++) {
+    for (let i = 0; i < totalDots; i++) {
         const dot = document.createElement('div');
         dot.classList.add('dot');
-        if (i === currentSlide) dot.classList.add('active');
+        if (i === currentIndex) dot.classList.add('active');
         dot.addEventListener('click', () => goToSlide(i));
         dotsContainer.appendChild(dot);
     }
 };
 
-// Update slider position
-const updateSliderPosition = () => {
-    const grid = document.getElementById('testimonial-grid');
-    if (!grid) return;
-    
-    const slideWidth = document.querySelector('.t-card')?.offsetWidth + 30 || 310;
-    const offset = currentSlide * (slideWidth * 3);
-    grid.style.transform = `translateX(-${offset}px)`;
-    
-    // Update dots
-    document.querySelectorAll('.dot').forEach((dot, index) => {
-        dot.classList.toggle('active', index === currentSlide);
+const updateActiveDot = () => {
+    document.querySelectorAll('.dot').forEach((dot, idx) => {
+        dot.classList.toggle('active', idx === currentIndex);
     });
 };
 
-// Go to specific slide
+// Navigation Functions
 const goToSlide = (index) => {
-    const totalSlides = Math.ceil(testimonialsData.length / 3);
-    currentSlide = Math.max(0, Math.min(index, totalSlides - 1));
+    const maxIndex = Math.ceil(testimonialsDatabase.length / slidesToShow) - 1;
+    currentIndex = Math.max(0, Math.min(index, maxIndex));
     updateSliderPosition();
 };
 
-// Next slide
 const nextSlide = () => {
-    const totalSlides = Math.ceil(testimonialsData.length / 3);
-    if (currentSlide < totalSlides - 1) {
-        currentSlide++;
+    const maxIndex = Math.ceil(testimonialsDatabase.length / slidesToShow) - 1;
+    if (currentIndex < maxIndex) {
+        currentIndex++;
+        updateSliderPosition();
+    } else if (currentIndex === maxIndex) {
+        // Loop back to start
+        currentIndex = 0;
         updateSliderPosition();
     }
 };
 
-// Previous slide
 const prevSlide = () => {
-    if (currentSlide > 0) {
-        currentSlide--;
+    if (currentIndex > 0) {
+        currentIndex--;
+        updateSliderPosition();
+    } else if (currentIndex === 0) {
+        // Loop to end
+        const maxIndex = Math.ceil(testimonialsDatabase.length / slidesToShow) - 1;
+        currentIndex = maxIndex;
         updateSliderPosition();
     }
 };
 
-// Auto slide
+// Auto Slide
 const startAutoSlide = () => {
-    slideInterval = setInterval(() => {
-        const totalSlides = Math.ceil(testimonialsData.length / 3);
-        if (currentSlide < totalSlides - 1) {
-            currentSlide++;
-        } else {
-            currentSlide = 0;
-        }
-        updateSliderPosition();
+    if (autoSlideInterval) clearInterval(autoSlideInterval);
+    autoSlideInterval = setInterval(() => {
+        nextSlide();
     }, 5000);
 };
 
 const stopAutoSlide = () => {
-    if (slideInterval) clearInterval(slideInterval);
+    if (autoSlideInterval) clearInterval(autoSlideInterval);
 };
 
-// Touch swipe for mobile
+// Touch Swipe Support
 const initTouchSwipe = () => {
-    const grid = document.getElementById('testimonial-grid');
-    if (!grid) return;
+    const wrapper = document.querySelector('.testimonial-slider-wrapper');
+    if (!wrapper) return;
     
-    grid.addEventListener('touchstart', (e) => {
+    wrapper.addEventListener('touchstart', (e) => {
         touchStartX = e.changedTouches[0].screenX;
+        stopAutoSlide();
     });
     
-    grid.addEventListener('touchend', (e) => {
+    wrapper.addEventListener('touchend', (e) => {
         touchEndX = e.changedTouches[0].screenX;
         handleSwipe();
+        startAutoSlide();
     });
 };
 
@@ -655,16 +710,298 @@ const handleSwipe = () => {
     }
 };
 
-// Modal for sharing testimonials
-const initShareTestimonial = () => {
-    const shareBtn = document.getElementById('share-testimonial-btn');
-    if (!shareBtn) return;
+// ========================
+// WHATSAPP TESTIMONIAL SUBMISSION
+// ========================
+
+// Open WhatsApp Modal
+const openTestimonialModal = () => {
+    const modal = document.getElementById('testimonial-modal');
+    if (!modal) return;
     
-    shareBtn.addEventListener('click', () => {
-        createShareModal();
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    
+    // Initialize rating selector
+    initRatingSelector();
+};
+
+const closeTestimonialModal = () => {
+    const modal = document.getElementById('testimonial-modal');
+    if (!modal) return;
+    
+    modal.style.display = 'none';
+    document.body.style.overflow = '';
+    resetForm();
+};
+
+const resetForm = () => {
+    document.getElementById('test-name').value = '';
+    document.getElementById('test-location').value = '';
+    document.getElementById('test-meal').value = '';
+    document.getElementById('test-comment').value = '';
+    document.getElementById('test-phone').value = '';
+    document.getElementById('test-rating').value = '5';
+    
+    // Reset rating selector
+    document.querySelectorAll('#rating-select span').forEach(span => {
+        span.classList.remove('selected');
+        if (span.dataset.rating === '5') span.classList.add('selected');
     });
 };
 
+const initRatingSelector = () => {
+    const ratingSpans = document.querySelectorAll('#rating-select span');
+    const ratingInput = document.getElementById('test-rating');
+    
+    ratingSpans.forEach(span => {
+        span.addEventListener('click', () => {
+            ratingSpans.forEach(s => s.classList.remove('selected'));
+            span.classList.add('selected');
+            ratingInput.value = span.dataset.rating;
+        });
+    });
+};
+
+// Submit Testimonial via WhatsApp
+const submitTestimonialViaWhatsApp = async (e) => {
+    e.preventDefault();
+    
+    // Get form values
+    const name = document.getElementById('test-name').value.trim();
+    const location = document.getElementById('test-location').value.trim();
+    const meal = document.getElementById('test-meal').value.trim();
+    const comment = document.getElementById('test-comment').value.trim();
+    const rating = document.getElementById('test-rating').value;
+    const phone = document.getElementById('test-phone').value.trim();
+    
+    // Validation
+    if (!name || !location || !comment) {
+        showNotification('Please fill in all required fields!', 'error');
+        return;
+    }
+    
+    if (comment.length < 10) {
+        showNotification('Please write a more detailed review (at least 10 characters)', 'error');
+        return;
+    }
+    
+    // Format rating stars for WhatsApp
+    const ratingStars = '★'.repeat(parseInt(rating)) + '☆'.repeat(5 - parseInt(rating));
+    
+    // Create WhatsApp message
+    const message = `🍽️ *NEW TESTIMONIAL - FoodieBudget* 🍽️%0A%0A` +
+        `*Customer:* ${name}%0A` +
+        `*Location:* ${location}%0A` +
+        `*Rating:* ${ratingStars} (${rating}/5)%0A` +
+        `${meal ? `*Favorite Meal:* ${meal}%0A` : ''}` +
+        `*Review:* "${comment}"%0A%0A` +
+        `*Submitted via:* FoodieBudget Web App%0A` +
+        `${phone ? `*Customer WhatsApp:* ${phone}%0A%0A` : '%0A'}` +
+        `_Please review and publish this testimonial on the website._%0A%0A` +
+        `Reply "CONFIRM" to approve this testimonial.`;
+    
+    // WhatsApp business number (replace with your actual number)
+    const whatsappNumber = "254700000000";
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${message}`;
+    
+    // Show loading state
+    const submitBtn = document.querySelector('.submit-review-btn');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+    submitBtn.disabled = true;
+    
+    // Simulate sending (open WhatsApp after short delay)
+    setTimeout(() => {
+        window.open(whatsappUrl, '_blank');
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+        
+        // Show success message
+        showNotification('✓ Thank you! Your review has been sent. Check WhatsApp to complete!', 'success');
+        
+        // Close modal after 2 seconds
+        setTimeout(() => {
+            closeTestimonialModal();
+        }, 2000);
+        
+        // Also add to local database immediately (optimistic update)
+        addTestimonialToLocal({
+            name,
+            location,
+            rating: parseFloat(rating),
+            comment,
+            favoriteMeal: meal || null,
+            date: new Date().toISOString().split('T')[0],
+            phone: phone || null,
+            id: testimonialsDatabase.length + 1
+        });
+    }, 500);
+};
+
+// Add testimonial to local display
+const addTestimonialToLocal = (newTestimonial) => {
+    testimonialsDatabase.unshift(newTestimonial);
+    renderTestimonials();
+    showNotification('Your review is now live! 🎉', 'success');
+    
+    // Scroll to testimonials section
+    document.querySelector('.testimonials').scrollIntoView({ behavior: 'smooth' });
+};
+
+// Show Notification
+const showNotification = (message, type = 'success') => {
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.innerHTML = `
+        <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+        <span>${message}</span>
+    `;
+    notification.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: ${type === 'success' ? '#25D366' : '#EF476F'};
+        color: white;
+        padding: 15px 25px;
+        border-radius: 12px;
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 500;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        animation: slideInRight 0.3s ease;
+        cursor: pointer;
+    `;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.style.animation = 'slideOutRight 0.3s ease';
+        setTimeout(() => notification.remove(), 300);
+    }, 4000);
+    
+    notification.onclick = () => notification.remove();
+};
+
+// Add animation styles
+const addNotificationStyles = () => {
+    if (!document.querySelector('#notification-styles')) {
+        const style = document.createElement('style');
+        style.id = 'notification-styles';
+        style.textContent = `
+            @keyframes slideInRight {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            @keyframes slideOutRight {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+};
+
+// Initialize Testimonials Module
+const initTestimonials = () => {
+    // Set initial slidesToShow
+    slidesToShow = updateSlidesToShow();
+    
+    // Render testimonials
+    renderTestimonials();
+    
+    // Add event listeners for slider buttons
+    const prevBtn = document.querySelector('.prev-slide');
+    const nextBtn = document.querySelector('.next-slide');
+    
+    if (prevBtn) prevBtn.addEventListener('click', () => {
+        prevSlide();
+        stopAutoSlide();
+        startAutoSlide();
+    });
+    
+    if (nextBtn) nextBtn.addEventListener('click', () => {
+        nextSlide();
+        stopAutoSlide();
+        startAutoSlide();
+    });
+    
+    // Initialize share button
+    const shareBtn = document.getElementById('share-testimonial-btn');
+    if (shareBtn) {
+        shareBtn.addEventListener('click', openTestimonialModal);
+    }
+    
+    // Modal close handlers
+    const modal = document.getElementById('testimonial-modal');
+    const closeBtn = document.querySelector('.modal-close');
+    
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeTestimonialModal);
+    }
+    
+    if (modal) {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeTestimonialModal();
+        });
+    }
+    
+    // Form submission
+    const form = document.getElementById('testimonial-form');
+    if (form) {
+        form.addEventListener('submit', submitTestimonialViaWhatsApp);
+    }
+    
+    // Start auto-slide
+    startAutoSlide();
+    
+    // Pause on hover
+    const sliderContainer = document.querySelector('.testimonial-slider-container');
+    if (sliderContainer) {
+        sliderContainer.addEventListener('mouseenter', stopAutoSlide);
+        sliderContainer.addEventListener('mouseleave', startAutoSlide);
+    }
+    
+    // Handle window resize
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            const newSlidesToShow = updateSlidesToShow();
+            if (newSlidesToShow !== slidesToShow) {
+                slidesToShow = newSlidesToShow;
+                currentIndex = 0;
+                updateSliderDots();
+                updateSliderPosition();
+            }
+        }, 250);
+    });
+    
+    // Initialize touch swipe
+    initTouchSwipe();
+    
+    // Add notification styles
+    addNotificationStyles();
+};
+
+// Call this when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    initTestimonials();
+});
 const createShareModal = () => {
     // Remove existing modal if any
     const existingModal = document.getElementById('testimonial-modal');
