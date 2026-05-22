@@ -275,24 +275,12 @@ input, select {
 
 .wa-submit-btn:hover { background: #128C7E; transform: translateY(-3px); }
 
-/* Testimonials Section - Enhanced */
+/* Testimonials Section - Enhanced Slider */
 .testimonials {
     padding: 80px 0;
     background: var(--bg-light);
     position: relative;
     overflow: hidden;
-}
-
-.testimonials::before {
-    content: '"';
-    position: absolute;
-    font-size: 300px;
-    font-family: Georgia, serif;
-    color: var(--primary);
-    opacity: 0.05;
-    bottom: -50px;
-    right: -50px;
-    pointer-events: none;
 }
 
 .section-header {
@@ -326,49 +314,94 @@ input, select {
     margin-top: 20px;
 }
 
-.testimonial-slider {
+/* Slider Container */
+.testimonial-slider-container {
     position: relative;
-    max-width: 900px;
-    margin: 0 auto;
-    overflow: hidden;
-}
-
-.testimonial-grid {
     display: flex;
-    gap: 30px;
-    transition: transform 0.5s ease;
-    cursor: grab;
+    align-items: center;
+    gap: 15px;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-.testimonial-grid:active {
-    cursor: grabbing;
+.slider-nav {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: var(--card-bg);
+    border: 2px solid var(--primary);
+    color: var(--primary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
 }
 
+.slider-nav:hover {
+    background: var(--primary);
+    color: white;
+    transform: scale(1.1);
+}
+
+.testimonial-slider-wrapper {
+    overflow: hidden;
+    flex: 1;
+    border-radius: 20px;
+}
+
+.testimonial-track {
+    display: flex;
+    gap: 25px;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Testimonial Cards */
 .t-card {
-    flex: 0 0 calc(33.333% - 20px);
+    flex: 0 0 calc(33.333% - 17px);
     min-width: 280px;
     background: var(--card-bg);
-    padding: 30px;
+    padding: 25px;
     border-radius: 20px;
     box-shadow: var(--shadow);
-    transition: var(--transition);
+    transition: all 0.3s ease;
     position: relative;
 }
 
 .t-card:hover {
     transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.12);
 }
 
 .t-card::before {
     content: '"';
     position: absolute;
-    top: 20px;
+    top: 15px;
     left: 20px;
     font-size: 60px;
     font-family: Georgia, serif;
     color: var(--primary);
-    opacity: 0.2;
+    opacity: 0.15;
     line-height: 1;
+}
+
+.testimonial-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.testimonial-rating {
+    color: #f39c12;
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+}
+
+.testimonial-date {
+    font-size: 0.75rem;
+    color: var(--text-muted);
 }
 
 .t-card p {
@@ -378,6 +411,7 @@ input, select {
     font-style: italic;
     position: relative;
     z-index: 1;
+    font-size: 0.95rem;
 }
 
 .user-info {
@@ -399,7 +433,7 @@ input, select {
     justify-content: center;
     color: white;
     font-weight: bold;
-    font-size: 1.1rem;
+    font-size: 1rem;
 }
 
 .user-details {
@@ -409,51 +443,31 @@ input, select {
 .user-details strong {
     display: block;
     color: var(--text-main);
-    font-size: 1rem;
+    font-size: 0.95rem;
 }
 
-.user-details .user-location {
-    font-size: 0.8rem;
+.user-location {
+    font-size: 0.75rem;
     color: var(--text-muted);
 }
 
-.rating-stars {
-    margin-left: auto;
-    color: #f39c12;
-    font-size: 0.9rem;
+.user-location i {
+    margin-right: 3px;
+    font-size: 0.7rem;
 }
 
-/* Slider Controls */
-.slider-controls {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-    margin-top: 40px;
-}
-
-.slider-prev,
-.slider-next {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: var(--card-bg);
-    border: 1px solid var(--primary);
+.favorite-meal {
+    font-size: 0.7rem;
     color: var(--primary);
-    cursor: pointer;
-    transition: var(--transition);
+    margin-top: 3px;
 }
 
-.slider-prev:hover,
-.slider-next:hover {
-    background: var(--primary);
-    color: white;
-    transform: scale(1.1);
-}
-
+/* Slider Dots */
 .slider-dots {
     display: flex;
-    gap: 10px;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 35px;
 }
 
 .dot {
@@ -462,66 +476,93 @@ input, select {
     border-radius: 50%;
     background: var(--text-muted);
     cursor: pointer;
-    transition: var(--transition);
+    transition: all 0.3s ease;
 }
 
 .dot.active {
-    width: 25px;
+    width: 28px;
     border-radius: 5px;
     background: var(--primary);
 }
 
-/* Testimonial CTA */
+/* Share CTA */
 .testimonial-cta {
-    text-align: center;
     margin-top: 50px;
-    padding: 20px;
+    padding: 30px;
     background: linear-gradient(135deg, rgba(255,107,53,0.1), rgba(239,71,111,0.1));
-    border-radius: 15px;
+    border-radius: 20px;
+    text-align: center;
 }
 
-.testimonial-cta p {
+.cta-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.cta-content i {
+    font-size: 2rem;
+    color: #ff4757;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.cta-content p {
+    font-size: 1.2rem;
+    font-weight: 600;
     color: var(--text-main);
+    margin: 0;
 }
 
-.text-btn {
-    background: none;
+.share-btn {
+    background: #25D366;
+    color: white;
     border: none;
-    color: var(--primary);
-    font-weight: bold;
+    padding: 12px 28px;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 600;
     cursor: pointer;
-    text-decoration: underline;
-    transition: var(--transition);
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
 }
 
-.text-btn:hover {
-    color: var(--secondary);
+.share-btn:hover {
+    background: #128C7E;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(37,211,102,0.3);
 }
 
-/* Modal Styles for Share Testimonial */
+/* Modal Styles */
 .modal {
-    display: none;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(5px);
     z-index: 2000;
+    display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.modal.active {
-    display: flex;
-}
-
 .modal-content {
     background: var(--card-bg);
-    padding: 40px;
-    border-radius: 20px;
+    border-radius: 25px;
     max-width: 500px;
     width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
     position: relative;
     animation: slideUp 0.3s ease;
 }
@@ -537,42 +578,176 @@ input, select {
     }
 }
 
+.modal-header {
+    text-align: center;
+    padding: 25px 25px 10px;
+}
+
+.modal-header i {
+    font-size: 3rem;
+    color: #25D366;
+    margin-bottom: 10px;
+}
+
+.modal-header h3 {
+    font-size: 1.5rem;
+    color: var(--text-main);
+}
+
+.modal-subtitle {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+    padding: 0 25px;
+}
+
 .modal-close {
     position: absolute;
     top: 15px;
     right: 20px;
-    font-size: 24px;
+    font-size: 28px;
     cursor: pointer;
     color: var(--text-muted);
+    transition: all 0.2s;
 }
 
-.share-form textarea {
+.modal-close:hover {
+    color: var(--primary);
+    transform: rotate(90deg);
+}
+
+#testimonial-form {
+    padding: 0 25px 25px;
+}
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-main);
+}
+
+.form-group label i {
+    margin-right: 6px;
+    color: var(--primary);
+}
+
+.form-group input,
+.form-group textarea {
     width: 100%;
     padding: 12px;
     border: 1px solid #ddd;
     border-radius: 10px;
     background: var(--bg-light);
     color: var(--text-main);
-    resize: vertical;
-    font-family: inherit;
-    margin: 15px 0;
+    font-size: 0.95rem;
+    transition: all 0.2s;
 }
 
-.rating-input {
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(255,107,53,0.1);
+}
+
+.rating-select {
     display: flex;
-    gap: 10px;
-    margin: 15px 0;
-}
-
-.rating-input i {
-    font-size: 24px;
+    gap: 12px;
     cursor: pointer;
-    color: #ddd;
-    transition: var(--transition);
 }
 
-.rating-input i.active {
-    color: #f39c12;
+.rating-select span {
+    font-size: 1.5rem;
+    transition: all 0.2s;
+    opacity: 0.5;
+}
+
+.rating-select span.selected {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.rating-select span:hover {
+    transform: scale(1.2);
+    opacity: 0.8;
+}
+
+.form-group small {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+}
+
+.submit-review-btn {
+    width: 100%;
+    padding: 14px;
+    background: #25D366;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.submit-review-btn:hover {
+    background: #128C7E;
+    transform: translateY(-2px);
+}
+
+.modal-footer-note {
+    text-align: center;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    padding: 15px 25px 25px;
+    border-top: 1px solid rgba(0,0,0,0.1);
+    margin-top: 10px;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .t-card {
+        flex: 0 0 calc(50% - 12.5px);
+    }
+}
+
+@media (max-width: 768px) {
+    .t-card {
+        flex: 0 0 100%;
+    }
+    
+    .slider-nav {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .section-title {
+        font-size: 1.8rem;
+    }
+    
+    .cta-content {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .share-btn {
+        width: 100%;
+        justify-content: center;
+    }
 }
 
 /* Responsive */
