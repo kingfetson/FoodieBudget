@@ -3,7 +3,7 @@
 
 **Eat Well, Spend Smart** - A web app that helps Kenyans find delicious meals that fit their daily budget.
 
-![FoodieBudget Preview](https://via.placeholder.com/800x400/FF6B35/white?text=FoodieBudget)
+![FoodieBudget Preview](/screencapture-kingfetson-github-io-FoodieBudget-2026-05-22-13_17_11.png)
 
 ## 🌟 Features
 
